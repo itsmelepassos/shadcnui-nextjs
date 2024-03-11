@@ -1,94 +1,103 @@
 "use client"
 
-import { ChevronsUpDown } from "lucide-react"
-import * as React from "react"
+import { Check, ChevronsUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
 } from "@/components/ui/command"
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover"
-import { members } from "@/data/members"
+import { cn } from "@/lib/utils"
+import { Role } from "@/types/role"
+import { useState } from 'react'
 
-const frameworks = [
-    {
-        value: "next.js",
-        label: "Next.js",
-    },
-    {
-        value: "sveltekit",
-        label: "SvelteKit",
-    },
-    {
-        value: "nuxt.js",
-        label: "Nuxt.js",
-    },
-    {
-        value: "remix",
-        label: "Remix",
-    },
-    {
-        value: "astro",
-        label: "Astro",
-    },
+const roles = [
+  {
+    label: 'Viewer',
+    description: 'Can view and comment',
+    value: 'viewer'
+  },
+  {
+    label: 'Developer',
+    description: 'Can view, comment and edit',
+    value: 'developer'
+  },
+  {
+    label: 'Billing',
+    description: 'Can view, comment and manage billing',
+    value: 'billing'
+  },
+  {
+    label: 'Owner',
+    description: 'Admin-level access to all resources',
+    value: 'owner'
+  },
+];
+
+type Props = [
+  value: Role,
+  setValue: (newValue: Role) => void
 ]
 
 export function TeamCombobox() {
-    const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState("")
 
-    return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between"
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[200px] justify-between"
+        >
+          {value
+            ? roles.find((role) => role.value === value)?.label
+            : "Select role..."}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <Command>
+          <CommandInput placeholder="Search role..." />
+          <CommandEmpty>No role found.</CommandEmpty>
+          <CommandList>
+            <CommandGroup>
+              {roles.map((role) => (
+                <CommandItem
+                  key={role.value}
+                  value={role.value}
+                  onSelect={(currentValue) => {
+                    setValue(currentValue as Role);
+                    setOpen(false)
+                  }}
                 >
-                    {value
-                        ? frameworks.find((framework) => framework.value === value)?.label
-                        : "Select role..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-                <Command>
-                    <CommandInput placeholder="Search role..." />
-                    <CommandEmpty>No role found.</CommandEmpty>
-                    <CommandGroup>
-                        {/* {frameworks.map((framework) => (
-                            <CommandItem
-                                key={framework.value}
-                                value={framework.value}
-                                onSelect={(currentValue) => {
-                                    setValue(currentValue === value ? "" : currentValue)
-                                    setOpen(false)
-                                }}
-                            >
-                                <Check
-                                    className={cn(
-                                        "mr-2 h-4 w-4",
-                                        value === framework.value ? "opacity-100" : "opacity-0"
-                                    )}
-                                />
-                                {framework.label}
-                            </CommandItem>
-                        ))} */}
-                        {members.map((member) => (
-                            <CommandItem>.</CommandItem>
-                        ))}
-                    </CommandGroup>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    )
+                  <div>
+                    <p>{role.label}</p>
+                    <p className="text-muted-foreground">{role.description}</p>
+                  </div>
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === role.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
 }
