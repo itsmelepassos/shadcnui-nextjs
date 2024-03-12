@@ -23,34 +23,33 @@ import { useState } from 'react'
 const roles = [
   {
     label: 'Viewer',
-    description: 'Can view and comment',
+    description: 'Can view and comment.',
     value: 'viewer'
   },
   {
     label: 'Developer',
-    description: 'Can view, comment and edit',
+    description: 'Can view, comment and edit.',
     value: 'developer'
   },
   {
     label: 'Billing',
-    description: 'Can view, comment and manage billing',
+    description: 'Can view, comment and manage billing.',
     value: 'billing'
   },
   {
     label: 'Owner',
-    description: 'Admin-level access to all resources',
+    description: 'Admin-level access to all resources.',
     value: 'owner'
   },
-];
-
-type Props = [
-  value: Role,
-  setValue: (newValue: Role) => void
 ]
 
-export function TeamCombobox() {
+type Props = {
+  value: Role;
+  setValue: (newUser: Role) => void;
+}
+
+export function TeamCombobox({ value, setValue }: Props) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -59,7 +58,6 @@ export function TeamCombobox() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
         >
           {value
             ? roles.find((role) => role.value === value)?.label
@@ -67,12 +65,12 @@ export function TeamCombobox() {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className="p-0">
         <Command>
           <CommandInput placeholder="Search role..." />
-          <CommandEmpty>No role found.</CommandEmpty>
-          <CommandList>
-            <CommandGroup>
+          <CommandEmpty>No role.</CommandEmpty>
+          <CommandGroup>
+            <CommandList>
               {roles.map((role) => (
                 <CommandItem
                   key={role.value}
@@ -82,9 +80,9 @@ export function TeamCombobox() {
                     setOpen(false)
                   }}
                 >
-                  <div>
-                    <p>{role.label}</p>
-                    <p className="text-muted-foreground">{role.description}</p>
+                  <div className="flex-1 overflow-x-hidden">
+                    <p className="truncate">{role.label}</p>
+                    <p className="truncate text-sm text-muted-foreground">{role.description}</p>
                   </div>
                   <Check
                     className={cn(
@@ -94,8 +92,8 @@ export function TeamCombobox() {
                   />
                 </CommandItem>
               ))}
-            </CommandGroup>
-          </CommandList>
+            </CommandList>
+          </CommandGroup>
         </Command>
       </PopoverContent>
     </Popover>

@@ -1,13 +1,17 @@
+"use client"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Member } from "@/types/member";
+import { useState } from "react";
 import { TeamCombobox } from "./team-combobox";
-
 
 type Props = {
     data: Member
 }
 
 export const TeamItem = ({ data }: Props) => {
+    const [role, setRole] = useState(data.role);
+
     return (
         <div className="flex items-center gap-4">
             <div>
@@ -24,7 +28,7 @@ export const TeamItem = ({ data }: Props) => {
             </div>
 
             <div>
-                <TeamCombobox />
+                <TeamCombobox value={role} setValue={setRole} />
             </div>
         </div>
     );
