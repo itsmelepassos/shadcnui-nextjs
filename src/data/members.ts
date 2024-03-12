@@ -10,9 +10,9 @@ export const members: Member[] = [
     },
     {
         id: 2,
-        name: 'Valéria Dalla Valle Anceles',
+        name: 'Aria Krasnikova',
         avatar: 'https://ui.shadcn.com/avatars/01.png',
-        email: 'lelika@mbag.com',
+        email: 'ariakras@vipru.com',
         role: 'viewer'
     },
 ]
